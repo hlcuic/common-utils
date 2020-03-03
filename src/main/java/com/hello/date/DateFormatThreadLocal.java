@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
  */
 public class DateFormatThreadLocal {
 
+    private DateFormatThreadLocal() {
+
+    }
+
     /**
      * 年-月-日 秒:分:时 毫秒
      */

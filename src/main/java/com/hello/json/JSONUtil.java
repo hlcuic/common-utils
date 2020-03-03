@@ -1,6 +1,7 @@
 package com.hello.json;
 
 import com.alibaba.fastjson.JSON;
+import com.hello.model.Person;
 
 /**
  * 类名：json转换类
@@ -8,6 +9,10 @@ import com.alibaba.fastjson.JSON;
  * 直接使用fastjson包下的JSON工具类即可
  */
 public class JSONUtil {
+
+    private JSONUtil() {
+
+    }
 
     /**
      * 将model/Map/List对象转换为json串
