@@ -1,9 +1,12 @@
 package com.hello.model;
 
-public class Person {
-    private Integer identityId;
+import com.hello.annotation.CheckParams;
 
-    private String name;
+public class Person {
+
+    @CheckParams(columnName = "身份证号", length = {15, 18}) private Integer identityId;
+
+    @CheckParams(columnName = "姓名", notNull = true) private String name;
 
     public Person() {
 
