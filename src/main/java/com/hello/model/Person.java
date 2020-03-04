@@ -1,12 +1,12 @@
 package com.hello.model;
 
-import com.hello.annotation.CheckParams;
+import com.hello.annotation.CheckParamOnField;
 
 public class Person {
 
-    @CheckParams(columnName = "身份证号", length = {15, 18}) private Integer identityId;
+    @CheckParamOnField(columnName = "身份证号", length = {5, 10}) private Integer identityId;
 
-    @CheckParams(columnName = "姓名", notNull = true) private String name;
+    @CheckParamOnField(columnName = "姓名", notNull = true) private String name;
 
     public Person() {
 

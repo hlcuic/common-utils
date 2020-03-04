@@ -1,10 +1,12 @@
 package com.hello.validate;
 
 import com.alibaba.fastjson.JSON;
-import com.hello.annotation.CheckParams;
+import com.hello.annotation.CheckParamOnField;
+import com.hello.annotation.CheckParamOnMethod;
+import com.hello.annotation.CheckParamsOnMethod;
 
-import javax.jnlp.IntegrationService;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,7 +32,8 @@ public class ValidateUtil {
         Map<String, String> paramMap = JSON.parseObject(request, Map.class);
         for (Map.Entry<String, String> validateEntry : validateMap.entrySet()) {
             String validateKey = validateEntry.getKey();
-            if (paramMap.containsKey(validateKey)) {
+            // 只校验字段为null的
+            if (!paramMap.containsKey(validateKey)) {
                 String columnDesc = validateEntry.getValue();
                 throw new RuntimeException(columnDesc + "不能为空!");
             }
@@ -45,18 +48,21 @@ public class ValidateUtil {
             throw new RuntimeException("参数不能为空!");
         }
         Class clazz = t.getClass();
+        // getDeclaredFields() 获取本来声明的所有方法(包括private protected  public)，
+        // 但是不包括父类中声明的方法
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            CheckParams checkParams = field.getAnnotation(CheckParams.class);
+            CheckParamOnField checkParams = field.getAnnotation(CheckParamOnField.class);
             if (null != checkParams) {
                 String columnName = checkParams.columnName();
                 Boolean notNull = checkParams.notNull();
                 int[] rightLength = checkParams.length();
+                field.setAccessible(true);
                 Object value = field.get(t);
                 if (notNull && value == null) {
                     throw new RuntimeException(columnName + "不能为空!");
                 }
-                if (value != null && legalLength(value, rightLength)) {
+                if (value != null && !legalLength(value, rightLength)) {
                     throw new RuntimeException(columnName + "长度不在合法范围内!");
                 }
             }
@@ -71,17 +77,42 @@ public class ValidateUtil {
      * @return
      */
     private static boolean legalLength(Object value, int[] rightLength) {
+        int valueLength = -1;
         if (value instanceof Integer) {
             String newVal = String.valueOf(value);
-            int valueLength = newVal.length();
-            return valueLength <= rightLength[1] && valueLength >= rightLength[0];
+            valueLength = newVal.length();
         }
-        return false;
+        if (value instanceof String) {
+            valueLength = ((String)value).length();
+        }
+        return valueLength <= rightLength[1] && valueLength >= rightLength[0];
     }
 
     /**
      * 第三种方式：可以对调用的方法做动态代理，然后将入参与注解元数据比较
      * 做参数校验
      */
+    public static void validate(Method method, Object[] args) throws NoSuchFieldException, IllegalAccessException {
+        CheckParamsOnMethod checkParamsOnMethod = method.getDeclaredAnnotation(CheckParamsOnMethod.class);
+        if (null == checkParamsOnMethod) {
+            return;
+        }
+        Class clazz = args[0].getClass();
+        CheckParamOnMethod[] checkParamOnMethods = checkParamsOnMethod.value();
+        for (CheckParamOnMethod annotation : checkParamOnMethods) {
+            // getDeclaredField()获取本类中声明的方法（包括private/protected/public）,不包括父类
+            // getField()获取所有public修饰的方法，包括父类中声明的
+            Field field = clazz.getDeclaredField(annotation.columnName());
+            field.setAccessible(true);
+            Object value = field.get(args[0]);
+            if (annotation.notNull() && value == null) {
+                throw new RuntimeException(annotation.columnDesc() + "不能为空!");
+            }
+            if (value != null && !legalLength(value, annotation.length())) {
+                throw new RuntimeException(annotation.columnDesc() + "长度不在合法范围内!");
+            }
+        }
+
+    }
 
 }
