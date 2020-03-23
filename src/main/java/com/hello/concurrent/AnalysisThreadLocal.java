@@ -1,7 +1,7 @@
 package com.hello.concurrent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * 分析ThreadLocal类的实现原理
@@ -16,7 +16,7 @@ public class AnalysisThreadLocal {
         }
     };
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         new Thread(() -> {
             threadLocal.get().put("1", "aaaaa");
             String key = threadLocal.get().get("1");
@@ -30,3 +30,4 @@ public class AnalysisThreadLocal {
 
     }
 }
+
