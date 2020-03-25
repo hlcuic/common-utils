@@ -16,22 +16,12 @@ public class CacheDemo {
         transactionSessionMapping.put("1", "aaa");
         transactionSessionMapping.put("2", "bbb");
         System.out.println(transactionSessionMapping.asMap());
-        try {
-            Thread.sleep(6000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         transactionSessionMapping.put("2", "bbb");
-        transactionSessionMapping.getIfPresent("1");
+        System.out.println(transactionSessionMapping.getIfPresent("1"));
+        System.out.println(transactionSessionMapping.getIfPresent("3"));
 
-        try {
-            Thread.sleep(6000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         System.out.println(transactionSessionMapping.asMap());
-        LockSupport.park();
 
     }
 }
