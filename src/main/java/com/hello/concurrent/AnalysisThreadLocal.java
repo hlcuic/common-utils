@@ -11,7 +11,8 @@ import java.util.*;
 public class AnalysisThreadLocal {
 
     private static ThreadLocal<Map<String, String>> threadLocal = new ThreadLocal<Map<String, String>>() {
-        @Override protected Map<String, String> initialValue() {
+        @Override
+        protected Map<String, String> initialValue() {
             return new HashMap<>();
         }
     };

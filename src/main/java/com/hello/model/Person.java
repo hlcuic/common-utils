@@ -8,6 +8,17 @@ public class Person {
 
     @CheckParamOnField(columnName = "姓名", notNull = true) private String name;
 
+    private static String address = "hello";
+
+    static{
+        System.out.println("address:"+address);
+        System.out.println("静态方法块......");
+    }
+
+    {
+        System.out.println("普通方法块......");
+    }
+
     public Person() {
 
     }

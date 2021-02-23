@@ -47,6 +47,7 @@ public class DBTool {
 
     public static PreparedStatement getPreparedStatement(String sql) throws SQLException {
         Connection connection = getConnection();
+        connection.setAutoCommit(false);
         return connection.prepareStatement(sql);
     }
 
@@ -76,10 +77,21 @@ public class DBTool {
      * @throws SQLException
      */
     public static void executeUpdate(String sql, List<String> list) throws SQLException {
-        PreparedStatement preparedStatement = getPreparedStatement(sql);
-        preparedStatement.setString(1, list.get(0));
-        int effectiveCount = preparedStatement.executeUpdate();
-        System.out.println("effectiveCount: " + effectiveCount);
+        Connection connection = getConnection();
+        connection.setAutoCommit(false);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, list.get(0));
+            int effectiveCount = preparedStatement.executeUpdate();
+            System.out.println("effectiveCount: " + effectiveCount);
+            int i = 10/0;
+        }catch(Exception e){
+            System.out.println("发生回滚");
+            connection.rollback();
+            return;
+        }
+        System.out.println("发生提交");
+        connection.commit();
     }
 
     public static void main(String[] args) throws SQLException {
@@ -87,7 +99,7 @@ public class DBTool {
         List<Integer> list = Arrays.asList(0, 1);
         executeQuery(sql, list);
         System.out.println("-------------------------");
-        sql = "insert into study.team(name)value(?)";
+        sql = "insert into study.user(name)value(?)";
         List<String> updateList = Arrays.asList("hello");
         executeUpdate(sql, updateList);
     }

@@ -22,6 +22,33 @@ public class ValidateUtil {
         validateMap.put("name", "姓名");
     }
 
+    public static void main(String[] args) {
+        // 1:调试断点
+        for(int i=0;i<1000;i++){
+            System.out.println(i);
+            System.out.println(i++);
+        }
+
+        // 2：调试drop to frame
+        testDebug();
+
+        // 3: 多线程调试
+        new Thread(()->{
+            System.out.println("hhh");
+        }).start();
+
+        new Thread(()->{
+            System.out.println("hello world");
+        }).start();
+
+        System.out.println("end");
+    }
+
+    private static void testDebug(){
+        System.out.println("hello world");
+        System.out.println("hello world2");
+    }
+
     /**
      * 第一种方式：直接在使用参数前调用静态方法校验
      * 如果request参数为json串/Map

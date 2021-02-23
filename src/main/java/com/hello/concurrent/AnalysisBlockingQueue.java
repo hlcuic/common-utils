@@ -3,9 +3,8 @@ package com.hello.concurrent;
 import java.util.concurrent.*;
 
 public class AnalysisBlockingQueue {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        // ArrayBlockingQueue
         //        BlockingQueue blockingQueue = new ArrayBlockingQueue(1000000);
         //        new Thread(new MyProducer(blockingQueue),"producer-thread").start();
         //        new Thread(new MyConsumer(blockingQueue),"consumer-thread").start();
@@ -14,9 +13,15 @@ public class AnalysisBlockingQueue {
         //        BlockingQueue linkedBlockingQueue = new LinkedBlockingQueue();
 
         // PriorityBlockingQueue
-        BlockingQueue priorityBlockingQueue = new PriorityBlockingQueue();
-        new Thread(new MyProducer(priorityBlockingQueue), "producer-thread").start();
-        new Thread(new MyConsumer(priorityBlockingQueue), "consumer-thread").start();
+//        BlockingQueue priorityBlockingQueue = new PriorityBlockingQueue();
+//        new Thread(new MyProducer(priorityBlockingQueue), "producer-thread").start();
+//        new Thread(new MyConsumer(priorityBlockingQueue), "consumer-thread").start();
+
+        LinkedBlockingDeque linkedBlockingDeque = new LinkedBlockingDeque();
+        linkedBlockingDeque.add("1");
+        while(true){
+            System.out.println(linkedBlockingDeque.take());
+        }
     }
 }
 
@@ -62,4 +67,12 @@ class MyConsumer implements Runnable {
         }
 
     }
+}
+
+interface A{}
+
+interface B{}
+
+interface C extends A,B{
+
 }

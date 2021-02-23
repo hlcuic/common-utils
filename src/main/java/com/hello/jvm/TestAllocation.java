@@ -12,10 +12,13 @@ public class TestAllocation {
      * @param args
      */
     public static void main(String[] args) {
-        byte[] allocation1, allocation2, allocation3, allocation4;
-        allocation1 = new byte[2 * _1MB];
-        allocation2 = new byte[2 * _1MB];
-        allocation3 = new byte[2 * _1MB];
-        allocation4 = new byte[4 * _1MB];   // 出现一次Minor GC
+//        byte[] allocation1, allocation2, allocation3, allocation4;
+//        allocation1 = new byte[2 * _1MB];
+//        allocation2 = new byte[2 * _1MB];
+//        allocation3 = new byte[2 * _1MB];
+//        allocation4 = new byte[4 * _1MB];   // 出现一次Minor GC
+        System.out.println(String.format("%s.%s","111.22","33"));
+
+        System.out.println("结果："+(15324091412428800L>>17));
     }
 }
